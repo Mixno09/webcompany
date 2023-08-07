@@ -65,11 +65,15 @@ function make_user_model(): UserModel
 
 function render_counter(string $name): string
 {
-    $count = isset($_COOKIE[$name]) ? (int) $_COOKIE[$name] : 0;
+    $count = isset($_COOKIE[$name]) ? (int)$_COOKIE[$name] : 0;
     $count++;
-    setcookie($name, $count, time()+60*60*24*30, '/');
+    setcookie($name, $count, time() + 60 * 60 * 24 * 30, '/');
 
-    return render('counter', ['count' => $count], null);
+    $stat = isset($_COOKIE['count_total']) ? (int)$_COOKIE['count_total'] : 0;
+    $stat++;
+    setcookie('count_total', $stat, time() + 60 * 60 * 24 * 30, '/');
+
+    return render('counter', ['count' => $count, 'stat' => $stat], null);
 }
 
 function abort(int $code): void
