@@ -1,0 +1,38 @@
+<?php
+
+use function App\render_counter;
+
+/**
+ * @var array $city
+ * @var array $errors
+ */
+?>
+<?= render_counter('cities') ?>
+<div class="post">
+    <div class="postheader"></div>
+    <div class="postcontent">
+        <h2>Список городов</h2>
+        <form action="/cities/update.php" method="post">
+            <div class="form">
+                <h3>Форма редактирования города</h3>
+                <span>Название:<input type="text" name="name" required=""
+                                      value="<?= htmlspecialchars($city['name']) ?>"></span>
+                <span>Индекс Сортировки:<input type="text" name="index" required=""
+                                               value="<?= htmlspecialchars($city['index']) ?>"></span>
+                <input type="hidden" name="id" value="<?= htmlspecialchars($city['id']) ?>">
+                <input type="submit" value="Подтвердить редактирование">
+                <a href="/cities/index.php">Отмена</a>
+            </div>
+        </form>
+    </div>
+    <div class="postbottom"></div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errors = <?= json_encode($errors)?>;
+        var message = errors.join("\n");
+        if (message) {
+            alert(message);
+        }
+    });
+</script>

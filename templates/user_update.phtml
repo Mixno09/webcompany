@@ -1,0 +1,53 @@
+<?php
+/**
+ * @var array $user
+ * @var null|array $cities
+ * @var array $errors
+ */
+
+use function App\render_counter;
+use function App\url;
+?>
+
+<?= render_counter('users') ?>
+
+<div class="post">
+    <div class="postheader"></div>
+    <div class="postcontent">
+        <h2>Список Пользователей</h2>
+        <p><a name="top"></a></p>
+        <form action="/users/update.php" method="post" enctype="multipart/form-data">
+            <div class="form">
+                <h3>Форма Редактирования Пользователя</h3>
+                <span>Имя <input type="text" name="name" required=""
+                                 value="<?= htmlspecialchars($user['name']) ?>"> </span>
+                <span>Фамилия <input type="text" name="surname" required=""
+                                     value="<?= htmlspecialchars($user['surname']) ?>"> </span>
+                <span>Город
+                        <select size="1" name="cityId">
+                            <option disabled="">Выберите город</option>
+                            <?php foreach ($cities as $city): ?>
+                            <option value="<?= htmlspecialchars($city['id']) ?>"><?= htmlspecialchars($city['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                </span>
+                <img width="100" src="<?php echo url(PUBLIC_PATH, $user['filename'])?>" class="image"
+                     alt="Фотография">
+                <input type="file" id="file" name="uploadfile">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($user['id']) ?>">
+                <input type="submit" value="Подтвердить редактирование">
+                <a href="/users/index.php">Отмена</a>
+            </div>
+        </form>
+    </div>
+    <div class="postbottom"></div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errors = <?= json_encode($errors)?>;
+        var message = errors.join("\n");
+        if (message) {
+            alert(message);
+        }
+    });
+</script>

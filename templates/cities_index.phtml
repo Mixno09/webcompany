@@ -1,0 +1,84 @@
+<?php
+
+use function App\render_counter;
+
+/**
+ * @var array $cities
+ * @var int $sort
+ */
+?>
+
+<?= render_counter('cities') ?>
+
+<div class="post">
+    <div class="postheader"></div>
+    <div class="postcontent">
+        <h2>Список городов</h2>
+        <?php if ($sort === 1): ?>
+            <form method="get">
+                <div class="sortform">
+                    <div class="pole">
+                        <h3>Поле сортировки</h3>
+                        <span>
+                <input type="radio" name="order_by" value="id" checked="">
+                <b>id</b>
+                </span>
+                        <span>
+                <input type="radio" name="order_by" value="name">
+                    <b>Название Города</b>
+                </span>
+                        <span>
+                            <input type="radio" name="order_by" value="index">
+                            <b>Индекс Сортировки</b>
+                        </span>
+                    </div>
+                    <div class="napr">
+                        <h3>Направление сортировки</h3>
+                        <span>
+                            <input type="radio" name="order" value="ASC" checked="">
+                            <b>Возрастание</b>
+                        </span>
+                        <span>
+                            <input type="radio" name="order" value="DESC">
+                            <b>Убывание</b>
+                        </span>
+                    </div>
+                    <input type="submit" value="Сортировать">
+                    <a href="/cities/index.php">Отмена</a>
+                </div>
+            </form>
+        <?php endif; ?>
+        <div class="form flrig">
+            <form action="/cities/create.php" method="get">
+                <input type="submit" value="Добавить">
+            </form>
+            <?php if ($sort !== 1) : ?>
+                <form action="/cities/index.php" method="get">
+                    <input type="submit" value="Сортировать">
+                    <input type="hidden" name="sort" value="1">
+                </form>
+            <?php endif; ?>
+        </div>
+
+        <?php foreach ($cities as $city): ?>
+            <div class='cpsity'>
+                <h3><?= htmlspecialchars($city['name']) ?></h3>
+                <span>
+                                <form action="/cities/delete.php" method="post">
+                                    <input type="hidden" name="id" value="<?= htmlspecialchars($city['id']) ?>">
+                                    <input type="submit" name="del_fors_city"
+                                           onclick="return confirm('Вы действительно хотите удалить город?')"
+                                           value="Удалить">
+                                </form>
+                            </span>
+                <span>
+                        <form action="/cities/update.php" method="get">
+                            <input type="hidden" name="id" value="<?= htmlspecialchars($city['id']) ?>">
+                            <input type="submit" value="Редактировать">
+                        </form>
+                    </span>
+            </div>
+        <? endforeach; ?>
+    </div>
+    <div class="postbottom"></div>
+</div>

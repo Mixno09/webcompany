@@ -1,0 +1,118 @@
+<?php
+
+use function App\render_counter;
+use function App\url;
+
+/**
+ * @var array $users
+ * @var array $cities
+ * @var int|null $cityId
+ * @var int|null $sort
+*/
+?>
+
+<?= render_counter('users') ?>
+
+<div class="post">
+    <div class="postheader"></div>
+    <div class="postcontent">
+        <h2>Список Пользователей</h2>
+
+        <?php if ($sort === 1): ?>
+            <form method="get">
+                <div class="sortform">
+                    <div class="pole">
+                        <h3>Поле сортировки</h3>
+                        <span>
+                            <input type="radio" name="order_by" value="id" checked="">
+                            <b>id</b>
+                        </span>
+                        <span>
+                            <input type="radio" name="order_by" value="name">
+                            <b>Имя</b>
+                        </span>
+                        <span>
+                            <input type="radio" name="order_by" value="surname">
+                            <b>Фамилия</b>
+                        </span>
+                        <span>
+                            <input type="radio" name="order_by" value="cityid">
+                            <b>Городу</b>
+                        </span>
+                    </div>
+                    <div class="napr">
+                        <h3>Направление сортировки</h3>
+                        <span>
+                            <input type="radio" name="order" value="ASC" checked="">
+                            <b>Возрастание</b>
+                        </span>
+                        <span>
+                            <input type="radio" name="order" value="DESC">
+                            <b>Убывание</b>
+                        </span>
+                    </div>
+                    <input type="submit" value="Сортировать">
+                    <a href="/cities/index.php">Отмена</a>
+                </div>
+            </form>
+        <?php endif; ?>
+        <!--Сортирвка-->
+        <h3><a href="#down">Вниз</a></h3>
+        <div style="display:inline-flex">
+            <form action="/users/create.php" method="get">
+                <input type="submit" value="Добавить">
+            </form>
+            <?php if ($sort !== 1): ?>
+                <form action="/users/index.php" method="get">
+                    <input type="submit" value="Сортировать">
+                    <input type="hidden" name="sort" value="1">
+                </form>
+            <?php endif; ?>
+        </div>
+
+        <!--Создадим выпадающий список "Города"-->
+        <div class="filter">
+            <form method="get">
+                <h3>Фильтр по Городам</h3>
+                <select size="1" name="cityId">
+                    <option value="" <?php if ($cityId === null): ?> selected <?php endif; ?>> Выберите город </option>
+                    <? foreach ($cities as $city): ?>
+                        <option value="<?= htmlspecialchars($city['id']) ?>" <?php if ($cityId == $city['id']): ?>selected<?php endif; ?>>
+                            <?= htmlspecialchars($city['name']) ?>
+                        </option>
+                    <? endforeach; ?>
+                </select>
+                <input type="submit" value="Показать">
+            </form>
+        </div>
+            <?php foreach ($users as $user): ?>
+            <div class='users'>
+            <img width='100' src="<?= htmlspecialchars(url( PUBLIC_PATH, $user['filename'])) ?>" class='image' alt="Фотография">
+            <div class='userdan'>
+                <h4><?= htmlspecialchars($user['name']) ?></h4>
+                <?php
+                    $cityId = $user['cityid'];
+                    $cityName = array_key_exists($cityId, $cities) ? $cities[$cityId]['name'] : '';
+                ?>
+                <p>Город: <?= htmlspecialchars($cityName) ?> </p>
+
+
+                <form action="/users/delete.php" method="post">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($user['id']) ?>">
+                    <input type="submit" value="Удалить"
+                           onclick="return confirm('Вы действительно хотите удалить пользователя?')">
+                </form>
+
+                <form action="/users/update.php" method="get">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($user['id'])?>">
+                    <input type="submit" value="Редактировать">
+                </form>
+            </div>
+        </div>
+        <?php endforeach; ?>
+        <h3><a href="#">Наверх</a></h3>
+    </div>
+    <div class="postbottom"></div>
+    <div id="down"></div>
+</div>
+

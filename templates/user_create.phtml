@@ -1,0 +1,58 @@
+<?php
+
+use function App\render_counter;
+
+/**
+ * @var array $data
+ * @var array $cities
+ * @var array $errors
+ */
+?>
+
+<?= render_counter('users') ?>
+
+<div class="post">
+    <div class="postheader"></div>
+    <div class="postcontent">
+        <h2>Список Пользователей</h2>
+        <p><a name="top"></a></p>
+        <!--Сортирвка-->
+        <form action="/users/create.php" method="post" enctype="multipart/form-data">
+            <div class="form">
+                <h3>Форма Добовления Пользователя</h3>
+                <input type="text" name="name" required="" value="<?= isset($data['name']) ? htmlspecialchars($data['name']) : '' ?>" placeholder="Имя">
+                <input type="text" name="surname" required="" value="<?= isset($data['surname']) ? htmlspecialchars($data['surname']) : '' ?>" placeholder="Фамилия">
+                <span>город:
+                        <select size="1" name="cityId">
+                            <option disabled="" value="<?= isset($data['cityId']) ? htmlspecialchars($data['cityId']) : '' ?>" selected >
+                                <?php if (isset($data['cityId']) && array_key_exists($data['cityId'], $cities)) :
+                                echo htmlspecialchars($cities[$data['cityId']]['name']) ?>
+                                <?php else: ?>
+                                Выберите город
+                                <?php endif; ?>
+                            </option>
+                            <?php foreach ($cities as $city): ?>
+                                <option value="<?= htmlspecialchars($city['id']) ?>"><?= htmlspecialchars($city['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                </span>
+                <p>Выберите файл изображения</p>
+                <input type="file" value="" name="uploadfile">
+
+                <input type="submit" value="Добавить">
+                <a href="/users/index.php">Отмена</a>
+            </div>
+        </form>
+    </div>
+    <div class="postbottom"></div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errors = <?= json_encode($errors)?>;
+        var message = errors.join("\n");
+        if (message) {
+            alert(message);
+        }
+    });
+</script>
+

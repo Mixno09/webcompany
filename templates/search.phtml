@@ -1,0 +1,49 @@
+<?php
+
+use function App\render_counter;
+use function App\url;
+
+/**
+ * @var array $errors
+ * @var null|array $users
+ * @var null|array $cities
+*/
+?>
+
+<?= render_counter('search')?>
+
+<form action="/search/index.php" method="get">
+    <div class="form">
+        <h3>Поиск по имени и/или фамилии пользователя</h3>
+        <span>
+            <input type="text" name="search" value="" required="" placeholder="Введите запрос">
+            <input type="hidden" value="1">
+        </span>
+        <input type="submit" value="Поиск">
+    </div>
+</form>
+<?php if (isset($users)): ?>
+<?php if ($users === []) : ?>
+<h3>Ничего не обнаружено</h3>
+<?php endif; ?>
+<?php if (! empty($users)): ?>
+<?php foreach ($users as $user): ?>
+    <div class="users">
+        <img width="100" src="<?= htmlspecialchars(url(PUBLIC_PATH, $user['filename']))?>" class="image" alt="Фотография">
+        <div class="userdan">
+            <h4><?= htmlspecialchars($user['name'])?></h4>
+            <p>Город:<?= $name = array_key_exists($user['cityid'], $cities) ? $cities[$user['cityid']]['name'] : '' ?></p>
+        </div>
+    </div>
+<?php endforeach; ?>
+<?php endif; ?>
+<?php endif; ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var errors = <?= json_encode($errors)?>;
+        var message = errors.join("\n");
+        if (message) {
+            alert(message);
+        }
+    });
+</script>
